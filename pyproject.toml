@@ -1,0 +1,60 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.black]
+line-length = 100
+target-version = ['py38']
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[project]
+name = "traveller-economics"
+version = "1.0.0"
+description = "Economic analysis toolkit for Traveller Third Imperium data"
+authors = [
+    {name = "Ted Tschopp", email = "ted@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+
+dependencies = [
+    "requests>=2.31.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "tqdm>=4.65.0"
+]
+
+[project.optional-dependencies]
+visualization = [
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "plotly>=5.15.0"
+]
+advanced = [
+    "scipy>=1.10.0"
+]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0"
+]
+all = [
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0", 
+    "plotly>=5.15.0",
+    "scipy>=1.10.0"
+]
+
+[project.scripts]
+traveller-economics = "run_analysis:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
