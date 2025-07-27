@@ -221,7 +221,7 @@ class UniversalTradeCircuitOptimizer:
             return {'profit_per_ton': 0, 'goods': [], 'viable': False, 'distance': 0}
     
     def find_optimal_circuits(self, min_stops: int = 3, max_stops: int = 6, max_circuits: int = 20) -> List[Dict]:
-        """Find optimal circular trading circuits"""
+        """Find optimal circular trading circuits (relaxed for more discovery)"""
         # Get high-value worlds for circuit analysis, with better filtering for large sectors
         high_value_worlds = self.worlds_df[
             (self.worlds_df['ResourceUnits'] > 100) | 
@@ -230,67 +230,71 @@ class UniversalTradeCircuitOptimizer:
             (self.worlds_df['IsAg'] == 1) |
             (self.worlds_df['IsIn'] == 1)
         ].copy()
-        
-        # For large datasets, further filter to top worlds by Resource Units
-        if len(high_value_worlds) > 50:
-            high_value_worlds = high_value_worlds.nlargest(50, 'ResourceUnits')
-            print(f"Limited analysis to top 50 worlds by economic value")
-        
+
+        # For large datasets, further filter to top worlds by Resource Units (now 200 instead of 50)
+        if len(high_value_worlds) > 200:
+            high_value_worlds = high_value_worlds.nlargest(200, 'ResourceUnits')
+            print(f"Limited analysis to top 200 worlds by economic value")
+
         print(f"Analyzing circuits with {len(high_value_worlds)} high-value worlds...")
         print(f"Jump range: {self.jump_range} parsecs, Cargo: {self.cargo_tons} tons")
-        
+
         best_circuits = []
-        
-        # Try different circuit lengths
+
+        # Try different circuit lengths (now up to 10 stops)
         for circuit_length in range(min_stops, min(max_stops + 1, len(high_value_worlds))):
             print(f"  Checking {circuit_length}-stop circuits...")
-            
-            # Much more aggressive limits for large sectors
+
+            # Allow more combinations for larger circuits (less aggressive limiting)
             if len(high_value_worlds) > 30:
-                max_combinations = min(200, int(1000 / circuit_length))  # Fewer combinations for longer circuits
+                max_combinations = min(1000, int(5000 / circuit_length))  # More combinations for longer circuits
             else:
-                max_combinations = min(500, int(2000 / circuit_length))
-            
+                max_combinations = min(2000, int(10000 / circuit_length))
+
             circuit_count = 0
             for world_indices in combinations(range(len(high_value_worlds)), circuit_length):
                 circuit_count += 1
                 if circuit_count > max_combinations:
                     break
-                    
+
                 worlds = [high_value_worlds.iloc[i] for i in world_indices]
-                
-                # Try different orders for the circuit (much more limited for performance)
+
+                # Try different orders for the circuit (still limited for performance)
                 best_order = None
                 best_profit = 0
-                
+
                 # For performance, limit permutation testing
                 if circuit_length <= 3:
-                    orders_to_try = list(permutations(worlds))[:6]  # Only 6 permutations max
-                elif circuit_length == 4:
-                    orders_to_try = list(permutations(worlds))[:4]  # Only 4 permutations for 4-stop
+                    orders_to_try = list(permutations(worlds))[:6]
+                elif circuit_length <= 5:
+                    orders_to_try = list(permutations(worlds))[:8]
                 else:
-                    # For 5+ stops, just try the original order and one reverse
+                    # For 6+ stops, try original, reversed, and one random shuffle
+                    import random
                     orders_to_try = [tuple(worlds), tuple(reversed(worlds))]
-                
+                    random_order = list(worlds)
+                    random.shuffle(random_order)
+                    orders_to_try.append(tuple(random_order))
+
                 for world_order in orders_to_try:
                     circuit_valid = True
                     total_distance = 0
                     circuit_profit = 0
                     circuit_legs = []
-                    
+
                     # Check each leg of the circuit
                     for i in range(len(world_order)):
                         current = world_order[i]
-                        next_world = world_order[(i + 1) % len(world_order)]  # Wrap around
-                        
+                        next_world = world_order[(i + 1) % len(world_order)]
+
                         distance = self.calculate_distance(current['Hex'], next_world['Hex'])
-                        
+
                         if distance > self.jump_range:
                             circuit_valid = False
                             break
-                        
+
                         total_distance += distance
-                        
+
                         # Calculate profit for this leg
                         trade_result = self.calculate_trade_profit(current, next_world)
                         if trade_result['viable']:
@@ -299,18 +303,24 @@ class UniversalTradeCircuitOptimizer:
                                 'from': current['Name'],
                                 'to': next_world['Name'],
                                 'profit_per_ton': trade_result['profit_per_ton'],
-                                'goods': trade_result['goods'][:3],  # Top 3 goods
+                                'goods': trade_result['goods'][:3],
                                 'distance': distance
                             })
-                    
+
                     if circuit_valid and circuit_profit > best_profit:
                         best_profit = circuit_profit
                         best_order = world_order
                         best_legs = circuit_legs
                         best_total_distance = total_distance
-                
-                # If we found a viable circuit, add it to our results
-                if best_order and best_profit > 1000:  # Minimum viable circuit profit
+
+                # If we found a viable circuit, add it to our results (lowered profit threshold)
+                if best_order and best_profit > 100:  # Lowered minimum viable circuit profit
+                    num_jumps = len(best_order)
+                    fuel_cost_per_jump = 1000  # Cr 1,000 per jump (standard for J-2, 64 dton)
+                    total_fuel_cost = num_jumps * fuel_cost_per_jump
+                    maintenance_cost = 18500  # Cr 18,500 per circuit (monthly, Free Trader)
+                    gross_profit = best_profit * self.cargo_tons
+                    net_profit = gross_profit - total_fuel_cost - maintenance_cost
                     circuit = {
                         'worlds': [w['Name'] for w in best_order],
                         'hexes': [w['Hex'] for w in best_order],
@@ -318,14 +328,17 @@ class UniversalTradeCircuitOptimizer:
                         'sectors': [w['Sector'] for w in best_order],
                         'total_distance': best_total_distance,
                         'total_profit_per_ton': best_profit,
-                        'total_profit': best_profit * self.cargo_tons,
+                        'total_profit': gross_profit,
+                        'net_profit': net_profit,
+                        'fuel_cost': total_fuel_cost,
+                        'maintenance_cost': maintenance_cost,
                         'profit_per_jump': best_profit / len(best_order),
                         'circuit_length': len(best_order),
                         'legs': best_legs,
                         'efficiency': best_profit / best_total_distance if best_total_distance > 0 else 0
                     }
                     best_circuits.append(circuit)
-        
+
         # Sort by total profit and return top circuits
         return sorted(best_circuits, key=lambda x: x['total_profit'], reverse=True)[:max_circuits]
     
@@ -359,7 +372,10 @@ class UniversalTradeCircuitOptimizer:
             print(f"   Hexes: {' → '.join(circuit['hexes'])}")
             print(f"   Starports: {' → '.join(circuit['starports'])}")
             print(f"   Total Distance: {circuit['total_distance']} parsecs")
-            print(f"   Circuit Profit: Cr {circuit['total_profit']:,.0f} ({self.cargo_tons} tons)")
+            print(f"   Gross Circuit Profit: Cr {circuit['total_profit']:,.0f} ({self.cargo_tons} tons)")
+            print(f"   Fuel Cost: Cr {circuit['fuel_cost']:,.0f} ({circuit['circuit_length']} jumps @ Cr 1,000)")
+            print(f"   Maintenance Cost: Cr {circuit['maintenance_cost']:,.0f} (per circuit)")
+            print(f"   Net Circuit Profit: Cr {circuit['net_profit']:,.0f}")
             print(f"   Profit per Ton: Cr {circuit['total_profit_per_ton']:,.0f}")
             print(f"   Efficiency: Cr {circuit['efficiency']:.0f} per parsec per ton")
             
