@@ -1,0 +1,71 @@
+================================================================================
+TRAVELLER UNIVERSE: ALL FACTIONS ECONOMIC ANALYSIS
+================================================================================
+
+Analysis Date: 2025-07-26 16:33:12
+Milieu: M1105
+Canon Level: Official
+
+UNIVERSE OVERVIEW
+----------------------------------------
+Total Worlds Analyzed: 17,643
+Total Population: 6,525,304,666,158 beings
+Total Economic Output: 7,538,547 Resource Units
+Political Entities: 119 specific allegiances
+Major Factions: 7 categories
+
+MAJOR FACTION RANKINGS
+----------------------------------------
+Rank | Faction                    | Worlds | Total RU  | RU/Capita    | Population
+-------------------------------------------------------------------------------------
+   1 | Third Imperium             |   8987 | 4,207,592 |   0.00000111 | 3,783,682,398,443
+   2 | Aslan Hierate              |   3339 | 1,342,985 |   0.00000109 | 1,236,578,520,330
+   3 | Non-Aligned                |   2353 |   718,477 |   0.00000132 | 544,229,519,053
+   4 | Other/Unknown              |   1292 |   551,743 |   0.00000133 | 413,973,905,828
+   5 | Solomani Confederation     |    967 |   447,226 |   0.00000136 | 329,008,713,925
+   6 | Zhodani Consulate          |    487 |   190,629 |   0.00000110 | 172,650,721,798
+   7 | Client States              |    218 |    79,894 |   0.00000177 | 45,180,886,781
+
+TOP POLITICAL ENTITIES (by Total Economic Output)
+------------------------------------------------------------
+Rank | Entity                                         | Worlds | Total RU
+--------------------------------------------------------------------------------
+   1 | Third Imperium (Domain of Sol)                 |   1364 |   874,004
+   2 | Third Imperium (Domain of Col)                 |   1878 |   870,980
+   3 | Third Imperium (Domain of Ilelish)             |   1625 |   779,567
+   4 | Third Imperium (Domain of Vland)               |   1635 |   652,768
+   5 | Non-Aligned (Human)                            |   1496 |   497,219
+   6 | Unknown (ImDa)                                 |   1152 |   484,390
+   7 | Solomani Confederation                         |    893 |   392,702
+   8 | Aslan Hierate (Seieakh Lodge)                  |    685 |   390,807
+   9 | Third Imperium (Domain of Deneb)               |    701 |   260,174
+  10 | Aslan Hierate (Mewar Lodge)                    |    648 |   200,189
+  11 | Aslan Hierate (Tuay Vacacy)                    |    465 |   197,319
+  12 | Zhodani Consulate (Inner Territories)          |    437 |   177,003
+  13 | Aslan Hierate (Vcler Lodge)                    |    471 |   166,126
+  14 | Aslan Hierate (Wahtoi Lodge)                   |    379 |   146,903
+  15 | Unknown (NaAs)                                 |    398 |   119,238
+
+MOST ECONOMICALLY EFFICIENT FACTIONS (RU per Capita)
+------------------------------------------------------------
+Rank | Faction                    | RU/Capita    | Worlds | Mean RU
+---------------------------------------------------------------------------
+   1 | Client States              |   0.00000177 |    218 |     366
+   2 | Solomani Confederation     |   0.00000136 |    967 |     462
+   3 | Other/Unknown              |   0.00000133 |   1292 |     427
+   4 | Non-Aligned                |   0.00000132 |   2353 |     305
+   5 | Third Imperium             |   0.00000111 |   8987 |     468
+   6 | Zhodani Consulate          |   0.00000110 |    487 |     391
+   7 | Aslan Hierate              |   0.00000109 |   3339 |     402
+
+FACTION SPECIALIZATION ANALYSIS
+----------------------------------------
+Faction                     | %Ag  | %In  | %Ri  | %Hi  | %Po
+-----------------------------------------------------------------
+Third Imperium              | 14.1 |  5.3 |  7.3 | 14.1 |  5.3
+Aslan Hierate               | 12.2 |  5.5 |  6.9 | 12.2 |  5.5
+Non-Aligned                 | 14.7 |  4.0 |  8.7 | 14.7 |  4.0
+Other/Unknown               | 17.3 |  5.4 | 11.7 | 17.3 |  5.4
+Solomani Confederation      | 12.3 |  5.2 |  4.9 | 12.3 |  5.2
+Zhodani Consulate           | 15.4 |  4.9 |  7.4 | 15.4 |  4.9
+Client States               | 17.9 |  4.6 | 10.1 | 17.9 |  4.6

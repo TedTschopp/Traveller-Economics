@@ -260,11 +260,16 @@ class AdvancedEconomicAnalyzer:
         forecast_df = self.generate_economic_forecast(worlds_df)
         trade_routes_df = self.analyze_trade_routes(worlds_df)
         
-        # Save all analysis results
+        # Save CSV files to output directory
+        output_dir.mkdir(exist_ok=True)
         indicators_df.to_csv(output_dir / 'advanced_economic_indicators.csv', index=False)
         clusters_df.to_csv(output_dir / 'economic_clusters.csv', index=False)
         forecast_df.to_csv(output_dir / 'economic_forecast.csv', index=False)
         trade_routes_df.to_csv(output_dir / 'trade_routes_analysis.csv', index=False)
+        
+        # Save human-readable report to Analysis directory
+        analysis_dir = Path("Analysis")
+        analysis_dir.mkdir(exist_ok=True)
         
         # Generate advanced text report
         report = self._generate_advanced_text_report(
@@ -272,7 +277,7 @@ class AdvancedEconomicAnalyzer:
             volatility_metrics, trade_routes_df
         )
         
-        with open(output_dir / 'advanced_economic_report.txt', 'w') as f:
+        with open(analysis_dir / 'advanced_economic_report.txt', 'w') as f:
             f.write(report)
         
         logger.info("Advanced economic analysis complete")

@@ -1,0 +1,36 @@
+
+Third Imperium Economic Analysis Summary
+========================================
+Milieu: M1105
+Analysis Date: 2025-07-26 16:33:33
+
+OVERVIEW
+--------
+Total Imperium Worlds: 8,987
+Total Sectors: 28
+Total Population: 3,783,682,398,443
+Total Resource Units: 4,207,592
+Average RU per Capita: 0.00
+
+TOP PERFORMERS
+--------------
+Highest Total Economic Output: Core
+Highest RU per Capita: Hinterworlds
+
+TRADE BREAKDOWN
+---------------
+Agricultural Worlds: 1,266 (14.1%)
+Industrial Worlds: 480 (5.3%)
+Rich Worlds: 653 (7.3%)
+High Population Worlds: 945 (10.5%)
+Poor Worlds: 1,429 (15.9%)
+
+STARPORT INFRASTRUCTURE
+-----------------------
+Class A Starports: 1,586
+Class B Starports: 2,930
+Class C Starports: 2,335
+Average Starport Score: 2.30
+
+This analysis uses official Traveller Map API data to provide
+quantitative insights into Third Imperium economic activity.

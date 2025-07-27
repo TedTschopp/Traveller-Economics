@@ -416,11 +416,14 @@ class AllFactionsAnalyzer:
             logger.error(f"Analysis failed: {e}")
             raise
     
-    def generate_all_factions_report(self, worlds_df: pd.DataFrame, 
+    def generate_comprehensive_report(self, all_worlds: pd.DataFrame, 
                                    faction_stats: pd.DataFrame, 
                                    major_faction_stats: pd.DataFrame):
         """Generate comprehensive report for all factions"""
-        report_path = self.output_dir / "all_factions_summary.txt"
+        # Save human-readable report to Analysis directory
+        analysis_dir = Path("Analysis")
+        analysis_dir.mkdir(exist_ok=True)
+        report_path = analysis_dir / "all_factions_summary.txt"
         
         with open(report_path, 'w') as f:
             f.write("=" * 80 + "\n")
@@ -432,9 +435,9 @@ class AllFactionsAnalyzer:
             f.write(f"Canon Level: {self.config.canon_tag}\n\n")
             
             # Overall Statistics
-            total_worlds = len(worlds_df)
-            total_population = worlds_df['Population'].sum()
-            total_ru = worlds_df['ResourceUnits'].sum()
+            total_worlds = len(all_worlds)
+            total_population = all_worlds['Population'].sum()
+            total_ru = all_worlds['ResourceUnits'].sum()
             num_factions = faction_stats['Allegiance'].nunique()
             num_major_factions = major_faction_stats['Faction_Type'].nunique()
             
